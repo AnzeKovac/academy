@@ -1,10 +1,19 @@
 <template>
-  <div class="page">
-    <h1>Test</h1>
-    <button @click="increment()">Clicks: {{ state.count }} Double: {{ state.double }}</button>
-
-    <video ref="videoPlayerRef" class="video-js"></video>
-
+  <div class="course">
+    <div class="player">
+      <video ref="videoPlayerRef" class="video-js"></video>
+    </div>
+    <div class="course-overview">
+      <!--<button @click="increment()">Clicks: {{ state.count }} Double: {{ state.double }}</button>-->
+      <ul>
+        <li>Event 1</li>
+        <li>Event 1</li>
+        <li>Event 1</li>
+        <li>Event 1</li>
+        <li>Event 1</li>
+        <li>Event 1</li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -21,6 +30,8 @@ export default {
     const playerOptions = {
       autoplay: true,
       controls: true,
+      fluid:true,
+      responsive: true,
       sources: [
         {
           src:
@@ -55,4 +66,19 @@ export default {
 
 <style scoped>
 @import './../../node_modules/video.js/dist/video-js.css';
+.course {
+  display :flex;
+  justify-content: space-around;
+  align-items: stretch;
+  align-content: center;
+}
+
+.player {
+  width: 60vw;
+}
+
+.course-overview {
+  background-color: honeydew;
+}
+
 </style>

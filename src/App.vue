@@ -1,27 +1,33 @@
 <template>
-  <div id="app">  
-    <counter></counter>
+  <div id="app">
+    <navbar></navbar>  
+    <course></course>
   </div>
 </template>
 
 <script>
-import Counter from './components/Counter.vue'
+import Navbar from './components/Navbar.vue'
+import Course from './components/Course.vue'
 
 export default {
   name: 'app',
   components: {
-    Counter
+    Navbar,
+    Course
   }
 }
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  margin-top: 10rem;
-  margin-left: 10rem;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #24252A;
+}
+
+*{
+  margin: 0;
+  padding: 0;
 }
 </style>
