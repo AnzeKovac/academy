@@ -1,50 +1,18 @@
 <template>
-    <header>
-      <p><b>Academy</b></p>
-        <div class="nav">
-          <ul>
-            <li><a href="#">Lecture</a></li>
-            <li><a class="active" href="#">Videos</a></li>
-          </ul>
-        </div>
-      </header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand font-weight-bold" href="#">Academy</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Course<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Editor</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 </template>
-
-<style>
-header {
-  box-sizing: border-box;
-  margin-bottom: 20px;
-}
-
-li, a, p {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 500;
-  font-size: 16px;
-  color: #edf0f1;
-  text-decoration: none;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 10%;
-}
-
-.nav {
-  list-style: none;
-}
-
-.nav li {
-  display: inline-block;
-  padding: 0px 20px;
-}
-
-.nav li a {
-  transition: all 0.3s ease 0s;
-}
-
-.nav li a:hover {
-  color:gray
-}
-</style>

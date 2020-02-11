@@ -1,18 +1,10 @@
 <template>
-  <div class="course">
-    <div class="player">
-      <video ref="videoPlayerRef" class="video-js"></video>
-    </div>
-    <div class="course-overview">
-      <!--<button @click="increment()">Clicks: {{ state.count }} Double: {{ state.double }}</button>-->
-      <ul>
-        <li>Event 1</li>
-        <li>Event 1</li>
-        <li>Event 1</li>
-        <li>Event 1</li>
-        <li>Event 1</li>
-        <li>Event 1</li>
-      </ul>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Farming 101</h5>
+      <div class="player">
+        <video ref="videoPlayerRef" class="video-js"></video>
+      </div>
     </div>
   </div>
 </template>
@@ -20,6 +12,7 @@
 <script>
 import { reactive, computed, onMounted, ref } from "vue";
 import videojs from "video.js";
+import 'videojs-markers-plugin';
 
 export default {
   /* eslint-disable no-console */
@@ -52,11 +45,49 @@ export default {
     onMounted(() => {
       console.log(h1ref);
       console.log(videoPlayerRef);
+    
       player = videojs(
         videoPlayerRef.value,
         playerOptions,
         function onPlayerReady() {}
       );
+
+      player.markers({
+        markerStyle: {
+           'width':'5px',
+           'border-radius': '40%',
+           'background-color': 'orange'
+        },
+        markerTip:{
+           display: true,
+           text: function(marker) {
+              return "I am a marker tip: "+ marker.text;
+           }
+        },
+        breakOverlay:{
+           display: true,
+           displayTime: 4,
+           style:{
+              'width':'100%',
+              'height': '10%',
+              'background-color': 'rgba(10,10,10,0.6)',
+              'color': 'white',
+              'font-size': '16px'
+           },
+           text: function(marker) {
+              return "This is a break overlay: " + marker.overlayText;
+           },
+        },
+        markers: [
+           {time: 9.5, text: "this", overlayText: "1", class: "special-blue"},
+           {time: 16,  text: "is", overlayText: "2"},
+           {time: 23.6,text: "so", overlayText: "3"},
+           {time: 28,  text: "cool", overlayText: "4"}
+        ],
+        onMarkerReached: () => {
+          player.pause();
+        }   
+     });
     });
 
     return { state, increment, videoPlayerRef, player };
@@ -66,19 +97,11 @@ export default {
 
 <style scoped>
 @import './../../node_modules/video.js/dist/video-js.css';
-.course {
-  display :flex;
-  justify-content: space-around;
-  align-items: stretch;
-  align-content: center;
+@import './../../node_modules/videojs-markers-plugin/dist/videojs.markers.plugin.css';
+/* hide time display on progress bar on the mouse position */
+.video-js .vjs-progress-control:hover .vjs-mouse-display,
+/* hide time display on progress bar on the current play position */
+.video-js .vjs-progress-holder .vjs-play-progress {
+   display: none; 
 }
-
-.player {
-  width: 60vw;
-}
-
-.course-overview {
-  background-color: honeydew;
-}
-
 </style>

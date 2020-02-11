@@ -1,33 +1,31 @@
 <template>
   <div id="app">
     <navbar></navbar>  
-    <course></course>
+    <div class="container p-3">
+      <div class="row">
+        <div class="col-8"><course></course></div>
+        <div class="col"><lecture-overview></lecture-overview></div>
+      </div>
+      
+      
+    </div>
   </div>
 </template>
 
 <script>
 import Navbar from './components/Navbar.vue'
 import Course from './components/Course.vue'
+import LectureOverview from './components/LectureOverview.vue'
 
 export default {
   name: 'app',
   components: {
     Navbar,
-    Course
+    Course,
+    LectureOverview
   }
 }
 </script>
 
 <style>
-#app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-family: 'Montserrat', sans-serif;
-  background-color: #24252A;
-}
-
-*{
-  margin: 0;
-  padding: 0;
-}
 </style>
