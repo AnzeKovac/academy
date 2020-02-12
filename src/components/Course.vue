@@ -12,7 +12,7 @@
 <script>
 import { reactive, computed, onMounted, ref } from "vue";
 import videojs from "video.js";
-import 'videojs-markers-plugin';
+import "videojs-markers-plugin";
 
 export default {
   /* eslint-disable no-console */
@@ -23,7 +23,7 @@ export default {
     const playerOptions = {
       autoplay: true,
       controls: true,
-      fluid:true,
+      fluid: true,
       responsive: true,
       sources: [
         {
@@ -33,6 +33,43 @@ export default {
         }
       ]
     };
+
+    const getMarkers = questionsToConvert => {
+      let markers = [];
+      questionsToConvert.forEach(question => {
+        markers.push({
+          time: question.time,
+          overlayText: question.question,
+          id: question.id
+        });
+      });
+      return markers;
+    };
+
+    const questions = [
+      {
+        id: "cow_question",
+        question: "How do you feed a cow ?",
+        answers: ["With milk", "Give it grass", "Don't feed it"],
+        points: 40,
+        time: 5
+      },
+      {
+        id: "tractor_question",
+        question: "How do you drive a tracor ?",
+        answers: ["It's hard", "Pedal to the metal", "With caution"],
+        points: 20,
+        time: 10
+      },
+      {
+        id: "nature_question",
+        question: "How do you survive in nature ?",
+        answers: ["Find nearest pizza place", "Call Bear", "Lay down and cry"],
+        points: 20,
+        time: 15
+      }
+    ];
+
     const state = reactive({
       count: 0,
       double: computed(() => state.count * 2)
@@ -45,7 +82,7 @@ export default {
     onMounted(() => {
       console.log(h1ref);
       console.log(videoPlayerRef);
-    
+
       player = videojs(
         videoPlayerRef.value,
         playerOptions,
@@ -54,40 +91,36 @@ export default {
 
       player.markers({
         markerStyle: {
-           'width':'5px',
-           'border-radius': '40%',
-           'background-color': 'orange'
+          width: "5px",
+          "border-radius": "40%",
+          "background-color": "orange"
         },
-        markerTip:{
-           display: true,
-           text: function(marker) {
-              return "I am a marker tip: "+ marker.text;
-           }
+        markerTip: {
+          display: false,
+          text: function(marker) {
+            return "I am a marker tip: " + marker.text;
+          }
         },
-        breakOverlay:{
-           display: true,
-           displayTime: 4,
-           style:{
-              'width':'100%',
-              'height': '10%',
-              'background-color': 'rgba(10,10,10,0.6)',
-              'color': 'white',
-              'font-size': '16px'
-           },
-           text: function(marker) {
-              return "This is a break overlay: " + marker.overlayText;
-           },
+        breakOverlay: {
+          display: true,
+          displayTime: 4,
+          style: {
+            width: "100%",
+            height: "10%",
+            "background-color": "rgba(10,10,10,0.6)",
+            color: "white",
+            "font-size": "16px"
+          },
+          text: function(marker) {
+            return marker.overlayText;
+          }
         },
-        markers: [
-           {time: 9.5, text: "this", overlayText: "1", class: "special-blue"},
-           {time: 16,  text: "is", overlayText: "2"},
-           {time: 23.6,text: "so", overlayText: "3"},
-           {time: 28,  text: "cool", overlayText: "4"}
-        ],
-        onMarkerReached: () => {
+        markers: getMarkers(questions),
+        onMarkerReached: marker => {
+          console.log(marker);
           player.pause();
-        }   
-     });
+        }
+      });
     });
 
     return { state, increment, videoPlayerRef, player };
@@ -96,12 +129,12 @@ export default {
 </script>
 
 <style scoped>
-@import './../../node_modules/video.js/dist/video-js.css';
-@import './../../node_modules/videojs-markers-plugin/dist/videojs.markers.plugin.css';
+@import "./../../node_modules/video.js/dist/video-js.css";
+@import "./../../node_modules/videojs-markers-plugin/dist/videojs.markers.plugin.css";
 /* hide time display on progress bar on the mouse position */
 .video-js .vjs-progress-control:hover .vjs-mouse-display,
 /* hide time display on progress bar on the current play position */
 .video-js .vjs-progress-holder .vjs-play-progress {
-   display: none; 
+  display: none;
 }
 </style>
