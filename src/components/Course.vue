@@ -1,7 +1,6 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Farming</h5>
       <div class="player">
         <video ref="videoPlayerRef" class="video-js">
         </video>
@@ -22,10 +21,6 @@
                 {{answer}} - test
               </li>
             </ul>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>
@@ -92,6 +87,8 @@
             context.emit("markerReached", marker);
             
             currentQuestion.value = props.questions[marker.id];
+            player.addClass('blur');
+            player.removeClass('no-blur');
             player.pause();
 
             /*let options = {};
@@ -107,6 +104,8 @@
 
       const resume = () => {
         currentQuestion.value = {}
+        player.removeClass('blur');
+        player.addClass('no-blur');
         player.play();
       }
 
@@ -145,6 +144,16 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  .no-blur{
+    filter: blur(0px);
+    transition: 0.5s filter linear;
+  }
+
+  .blur {
+    filter: blur(5px);
+    transition: 0.25s filter linear;
   }
 
 </style>

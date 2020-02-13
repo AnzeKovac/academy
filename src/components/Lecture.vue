@@ -25,7 +25,7 @@
         setup() {
             const questions = reactive({
                 cow_question:{
-                    question: "How do you feed a cow",
+                    question: "How do you feed a cow ?",
                     description:"Learn what a cow eats",
                     answers: ["With milk", "Give it grass", "Don't feed it"],
                     points: 40,
@@ -34,7 +34,7 @@
                     active:false,
                 },
                 tractor_question:{
-                    question: "How do you drive a tracor",
+                    question: "How do you drive a tractor ?",
                     description:"Want to know how to control 200hp+ machine ?",
                     answers: ["It's hard", "Pedal to the metal", "With caution"],
                     points: 20,
@@ -43,7 +43,7 @@
                     active:false,
                 },
                 nature_question:{
-                    question: "How do you survive in nature",
+                    question: "How do you survive in nature ?",
                     description: "Ask Bear.",
                     answers: ["Find nearest pizza place", "Call Bear", "Lay down and cry"],
                     points: 20,
