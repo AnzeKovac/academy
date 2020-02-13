@@ -1,140 +1,150 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Farming 101</h5>
+      <h5 class="card-title">Farming</h5>
       <div class="player">
-        <video ref="videoPlayerRef" class="video-js"></video>
+        <video ref="videoPlayerRef" class="video-js">
+        </video>
       </div>
     </div>
+    <div v-if="currentQuestion.answers" class="modal-absolute">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">{{currentQuestion.question}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="resume">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <ul class="list-group">
+              <li v-for="(answer,index) in currentQuestion.answers" v-bind:key="index" class="list-group-item">
+                {{answer}} - test
+              </li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
   </div>
 </template>
 
 <script>
-import { reactive, computed, onMounted, ref } from "vue";
-import videojs from "video.js";
-import "videojs-markers-plugin";
-
-export default {
   /* eslint-disable no-console */
-  setup() {
-    const videoPlayerRef = ref();
-    const h1ref = ref();
-    let player = ref(null);
-    const playerOptions = {
-      autoplay: true,
-      controls: true,
-      fluid: true,
-      responsive: true,
-      sources: [
-        {
-          src:
-            "https://cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/video.mp4",
-          type: "video/mp4"
-        }
-      ]
-    };
+  import { onMounted, ref } from "vue";
+  import videojs from "video.js";
+  import "videojs-markers-plugin";
 
-    const getMarkers = questionsToConvert => {
-      let markers = [];
-      questionsToConvert.forEach(question => {
-        markers.push({
-          time: question.time,
-          overlayText: question.question,
-          id: question.id
+  export default {
+    props: {
+      questions: Object
+    },
+
+    setup(props, context) {
+      const videoPlayerRef = ref();
+      let player = ref();
+
+      let currentQuestion = ref({})
+
+      const playerOptions = {
+        autoplay: true,
+        controls: true,
+        fluid: true,
+        responsive: true,
+        sources: [
+          {
+            src:
+              "https://cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/video.mp4",
+            type: "video/mp4"
+          }
+        ]
+      };
+
+      onMounted(() => {
+        player = videojs(
+          videoPlayerRef.value,
+          playerOptions,
+          function onPlayerReady() { 
+            player.controlBar.progressControl.disable();
+          }
+        );
+
+        player.markers({
+          markerStyle: {
+            width: "4px",
+            "z-index":0,          
+            "border-radius": "50%",
+            "background-color": "orange"
+          },
+          markerTip: {
+            display: false
+          },
+          breakOverlay: {
+            display: false,
+          },
+          markers: getMarkers(props.questions),
+          onMarkerReached: marker => {
+            context.emit("markerReached", marker);
+            
+            currentQuestion.value = props.questions[marker.id];
+            player.pause();
+
+            /*let options = {};
+            options.label = 'the label';
+
+            var ModalDialog = videojs.getComponent('ModalDialog');
+            var myModal = new ModalDialog(player, options);
+            player.addChild(myModal);
+            myModal.open();*/
+          }
         });
       });
-      return markers;
-    };
 
-    const questions = [
-      {
-        id: "cow_question",
-        question: "How do you feed a cow ?",
-        answers: ["With milk", "Give it grass", "Don't feed it"],
-        points: 40,
-        time: 5
-      },
-      {
-        id: "tractor_question",
-        question: "How do you drive a tracor ?",
-        answers: ["It's hard", "Pedal to the metal", "With caution"],
-        points: 20,
-        time: 10
-      },
-      {
-        id: "nature_question",
-        question: "How do you survive in nature ?",
-        answers: ["Find nearest pizza place", "Call Bear", "Lay down and cry"],
-        points: 20,
-        time: 15
+      const resume = () => {
+        currentQuestion.value = {}
+        player.play();
       }
-    ];
 
-    const state = reactive({
-      count: 0,
-      double: computed(() => state.count * 2)
-    });
-
-    function increment() {
-      state.count++;
+      return { videoPlayerRef, player, resume, currentQuestion };
     }
+  };
 
-    onMounted(() => {
-      console.log(h1ref);
-      console.log(videoPlayerRef);
-
-      player = videojs(
-        videoPlayerRef.value,
-        playerOptions,
-        function onPlayerReady() {}
-      );
-
-      player.markers({
-        markerStyle: {
-          width: "5px",
-          "border-radius": "40%",
-          "background-color": "orange"
-        },
-        markerTip: {
-          display: false,
-          text: function(marker) {
-            return "I am a marker tip: " + marker.text;
-          }
-        },
-        breakOverlay: {
-          display: true,
-          displayTime: 4,
-          style: {
-            width: "100%",
-            height: "10%",
-            "background-color": "rgba(10,10,10,0.6)",
-            color: "white",
-            "font-size": "16px"
-          },
-          text: function(marker) {
-            return marker.overlayText;
-          }
-        },
-        markers: getMarkers(questions),
-        onMarkerReached: marker => {
-          console.log(marker);
-          player.pause();
-        }
+  function getMarkers(questions) {
+    let markers = [];
+    for (let [key, value] of Object.entries(questions)) {
+      markers.push({
+        time: value.time,
+        overlayText: value.question,
+        id: key
       });
-    });
-
-    return { state, increment, videoPlayerRef, player };
+    }
+    return markers;
   }
-};
+
+
 </script>
 
 <style scoped>
-@import "./../../node_modules/video.js/dist/video-js.css";
-@import "./../../node_modules/videojs-markers-plugin/dist/videojs.markers.plugin.css";
-/* hide time display on progress bar on the mouse position */
-.video-js .vjs-progress-control:hover .vjs-mouse-display,
-/* hide time display on progress bar on the current play position */
-.video-js .vjs-progress-holder .vjs-play-progress {
-  display: none;
-}
+  @import "./../../node_modules/video.js/dist/video-js.css";
+  @import "./../../node_modules/videojs-markers-plugin/dist/videojs.markers.plugin.css";
+
+  /* hide time display on progress bar on the mouse position */
+  .video-js .vjs-progress-control:hover .vjs-mouse-display,
+  /* hide time display on progress bar on the current play position */
+  .video-js .vjs-progress-holder .vjs-play-progress {
+    display: none;
+  }
+
+  .modal-absolute{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
 </style>
