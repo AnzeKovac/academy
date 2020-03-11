@@ -30,7 +30,7 @@
                     answers: ["With milk", "Give it grass", "Don't feed it"],
                     points: 40,
                     score:0,
-                    time: 5,
+                    time: 2,
                     active:false,
                 },
                 tractor_question:{
